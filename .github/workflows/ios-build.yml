@@ -1,0 +1,44 @@
+name: Build iOS IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: 📥 Скачивание кода
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Установка Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 📦 Установка зависимостей
+        run: npm install
+
+      - name: 🏗 Сборка React
+        run: npm run build
+
+      - name: 🔄 Синхронизация Capacitor
+        run: npx cap sync ios
+
+      - name: 🍎 Сборка проекта (Без подписи)
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO clean build CONFIGURATION_BUILD_DIR=$PWD/../../build
+
+      - name: 📦 Упаковка в .ipa
+        run: |
+          mkdir -p Payload
+          mv build/App.app Payload/
+          zip -r Gudex.ipa Payload
+
+      - name: 📤 Загрузка готового файла
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gudex-iOS-App
+          path: Gudex.ipa
+          retention-days: 5

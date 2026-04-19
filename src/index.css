@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Умный скроллбар для чата */
+.chat-scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+
+/* Показываем ползунок при наведении на зону чата */
+.chat-scroll:hover {
+  scrollbar-color: #d4d4d8 transparent; /* Для светлой темы (zinc-300) */
+}
+
+.dark .chat-scroll:hover {
+  scrollbar-color: #3f3f46 transparent; /* Для темной темы (zinc-700) */
+}
+
+/* Скрываем стрелочки и фон для Chrome/Safari */
+.chat-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 10px;
+}
+.chat-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(161, 161, 170, 0.5); /* zinc-400 с прозрачностью */
+}
+
+/* Фон чата в стиле Telegram */
+.telegram-bg {
+  background-color: #ebede9;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239ba9b6' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.dark .telegram-bg {
+  background-color: #0f0f0f;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Плавный возврат пузыря на место после свайпа */
+.message-bubble { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.message-bubble.dragging { transition: none; } /* Отключаем задержку во время свайпа пальцем */
+
+html, body {
+  touch-action: pan-x pan-y;
+  overscroll-behavior-y: none; /* Убирает "резинку" при скролле за пределы страницы на Mac/iOS */
+}
+
+/* ЖЕЛЕЗНОЕ ПРАВИЛО ДЛЯ IOS: Шрифт в инпутах не меньше 16px */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+.touch-none {
+  touch-action: none; /* Это нужно, чтобы браузер не пытался скроллить страницу, когда ты тянешь чат */
+}
