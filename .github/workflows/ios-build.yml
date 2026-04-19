@@ -28,7 +28,8 @@ jobs:
       - name: 🍎 Сборка проекта (Без подписи)
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO clean build CONFIGURATION_BUILD_DIR=$PWD/../../build
+          # Собираем проект через .xcodeproj вместо .xcworkspace
+          xcodebuild -project App.xcodeproj -scheme App -configuration Release -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO clean build CONFIGURATION_BUILD_DIR=$PWD/../../build
 
       - name: 📦 Упаковка в .ipa
         run: |
